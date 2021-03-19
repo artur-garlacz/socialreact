@@ -2,14 +2,14 @@ import React, { Fragment } from 'react';
 import { Container } from 'semantic-ui-react';
 import NavBar from '../../features/nav/NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-// import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import { Route, withRouter, RouteComponentProps } from 'react-router-dom';
 import HomePage from '../../features/home/HomePage';
-import './styles.css';
-// import ActivityForm from '../../features/activities/form/ActivityForm';
-// import ActivityDetails from '../../features/activities/details/ActivityDetails';
+import ActivityForm from '../../features/activities/form/ActivityForm';
+import ActivityDetails from '../../features/activities/details/ActivityDetails';
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
+
 
   return (
     <Fragment>
@@ -21,12 +21,12 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
             <NavBar />
             <Container style={{ marginTop: '7em' }}>
               <Route exact path='/activities' component={ActivityDashboard} />
-              {/* <Route path='/activities/:id' component={ActivityDetails} /> */}
-              {/* <Route
+              <Route path='/activities/:id' component={ActivityDetails} />
+              <Route
                 key={location.key}
                 path={['/createActivity', '/manage/:id']}
                 component={ActivityForm}
-              /> */}
+              />
             </Container>
           </Fragment>
         )}
@@ -35,4 +35,4 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
   );
 };
 
-export default withRouter(App);
+export default withRouter(observer(App));

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu, Container, Button } from 'semantic-ui-react';
-// import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import { NavLink } from 'react-router-dom';
 
 const NavBar: React.FC = () => {
@@ -24,4 +24,4 @@ const NavBar: React.FC = () => {
   );
 };
 
-export default (NavBar);
+export default observer(NavBar);

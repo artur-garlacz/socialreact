@@ -16,6 +16,7 @@ const requests = {
   del: (url: string) => axios.delete(url).then(sleep(1000)).then(responseBody)
 };
 
+// activities crud
 const Activities = {
   list: (): Promise<IActivity[]> => requests.get('/activities'),
   details: (id: string) => requests.get(`/activities/${id}`),

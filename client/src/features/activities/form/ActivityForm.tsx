@@ -1,9 +1,9 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useContext, useEffect } from 'react';
 import { Segment, Form, Button, Grid } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
-// import { v4 as uuid } from 'uuid';
-// import ActivityStore from '../../../app/stores/activityStore';
-// import { observer } from 'mobx-react-lite';
+import { v4 as uuid } from 'uuid';
+import ActivityStore from '../../../app/stores/activityStore';
+import { observer } from 'mobx-react-lite';
 import { RouteComponentProps } from 'react-router';
 
 interface DetailParams {
@@ -14,16 +14,17 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
   history
 }) => {
-  // const activityStore = useContext(ActivityStore);
-  // const {
-  //   createActivity,
-  //   editActivity,
-  //   submitting,
-  //   activity: initialFormState,
-  //   loadActivity,
-  //   clearActivity
-  // } = activityStore;
+  const activityStore = useContext(ActivityStore);
+  const {
+    createActivity,
+    editActivity,
+    submitting,
+    activity: initialFormState,
+    loadActivity,
+    clearActivity
+  } = activityStore;
 
+  // gotta change to formik with Yup
   const [activity, setActivity] = useState<IActivity>({
     id: '',
     title: '',
@@ -34,38 +35,38 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
     venue: ''
   });
 
-  // useEffect(() => {
-  //   if (match.params.id && activity.id.length === 0) {
-  //     loadActivity(match.params.id).then(
-  //       () => initialFormState && setActivity(initialFormState)
-  //     );
-  //   }
-  //   return () => {
-  //     clearActivity();
-  //   };
-  // }, [
-  //   loadActivity,
-  //   clearActivity,
-  //   match.params.id,
-  //   initialFormState,
-  //   activity.id.length
-  // ]);
+  useEffect(() => {
+    if (match.params.id && activity.id.length === 0) {
+      loadActivity(match.params.id).then(
+        () => initialFormState && setActivity(initialFormState)
+      );
+    }
+    return () => {
+      clearActivity();
+    };
+  }, [
+    loadActivity,
+    clearActivity,
+    match.params.id,
+    initialFormState,
+    activity.id.length
+  ]);
 
-  // const handleSubmit = () => {
-  //   if (activity.id.length === 0) {
-  //     let newActivity = {
-  //       ...activity,
-  //       id: uuid()
-  //     };
-  //     createActivity(newActivity).then(() =>
-  //       history.push(`/activities/${newActivity.id}`)
-  //     );
-  //   } else {
-  //     editActivity(activity).then(() =>
-  //       history.push(`/activities/${activity.id}`)
-  //     );
-  //   }
-  // };
+  const handleSubmit = () => {
+    if (activity.id.length === 0) {
+      let newActivity = {
+        ...activity,
+        id: uuid()
+      };
+      createActivity(newActivity).then(() =>
+        history.push(`/activities/${newActivity.id}`)
+      );
+    } else {
+      editActivity(activity).then(() =>
+        history.push(`/activities/${activity.id}`)
+      );
+    }
+  };
 
   const handleInputChange = (
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,7 +79,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
     <Grid>
       <Grid.Column width={10}>
         <Segment clearing>
-          <Form >
+          <Form onSubmit={handleSubmit}>
             <Form.Input
               onChange={handleInputChange}
               name='title'
@@ -118,7 +119,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
               value={activity.venue}
             />
             <Button
-              // loading={submitting}
+              loading={submitting}
               floated='right'
               positive
               type='submit'
@@ -137,4 +138,4 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
   );
 };
 
-export default (ActivityForm);
+export default observer(ActivityForm);
